@@ -1,13 +1,5 @@
 <h3>Estoy en rutas</h3>
+<input type="text" ng-model="self.ruta" placeholder="Tu ruta">
+<div ng-include="'partial/gmap.html'"></div>
 
-
-<!--
-<google-map
-  center="map.center"
-  zoom="map.zoom"
-  draggable="true"
-  options="map.options"
-  control="map.control">
-   <marker coords="marker.coords" options="marker.options" idkey="marker.id" ></marker>
-</google-map>
--->
+<button ng-click="save(self);">Enviar</button>
