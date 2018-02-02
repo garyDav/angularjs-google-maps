@@ -40,7 +40,17 @@
   app.controller('mainCtrl',['$scope', '$log', 'uiGmapGoogleMapApi', function($scope, $log, GoogleMapApi) {
     console.log('Mierda estoy en el puto controller principal');
 
-    $scope.gmap = function( position = {latitude:-19.04781836355251,longitude:-65.25945163544924} ) {
+    $scope.setGmapConfig = function( config ) {
+      $scope.gmapConfig = config;
+    };
+    $scope.gmapConfig = {
+      lat: -19.04781836355251,
+      lng: -65.25945163544924,
+      status: false
+    };
+    $scope.gmap = function() {
+      var position = {latitude:$scope.gmapConfig.lat,longitude:$scope.gmapConfig.lng};
+      var status = $scope.gmapConfig.status;
       $scope.self = {
         address: '',
         lat: '',
@@ -109,34 +119,38 @@
 
       GoogleMapApi.then(function(maps) {
         console.log(maps);
-        // HTML5 geolocation, busca la ubicación actual
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude
-            };
-            $scope.marker.coords = pos;
-            $scope.map.center = pos;
+        if(status) {
+          // HTML5 geolocation, busca la ubicación actual
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+              var pos = {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+              };
+              $scope.marker.coords = pos;
+              $scope.map.center = pos;
 
-            $scope.$apply(function() {
-              $scope.self.lat = pos.latitude;
-              $scope.self.lng = pos.longitude;
+              $scope.$apply(function() {
+                $scope.self.lat = pos.latitude;
+                $scope.self.lng = pos.longitude;
+              });
+
+              /*$scope.infoWindow.setPosition({lat:pos.latitude,lng:pos.longitude});
+              $scope.infoWindow.setContent('<h4 style="margin:0;">Estás aquí</h4>');
+              $scope.infoWindow.open(maps, $scope.marker);*/
             });
-
-            /*$scope.infoWindow.setPosition({lat:pos.latitude,lng:pos.longitude});
-            $scope.infoWindow.setContent('<h4 style="margin:0;">Estás aquí</h4>');
-            $scope.infoWindow.open(maps, $scope.marker);*/
-          });
-        } else {
-          // Browser doesn't support Geolocation
-          swal("Error de geolocalización", "¡Tu navegador no soporta geolocalización!", "error");
+          } else {
+            // Browser doesn't support Geolocation
+            //swal("Error de geolocalización", "¡Tu navegador no soporta geolocalización!", "error");
+            alert('Tu pinche navegador no soporta geolocalización, se buena persona y cambia de navegador, ¡RÁPIDO! ');
+          }
         }
         $scope.geocoder = new maps.Geocoder();
-        $scope.infoWindow = new maps.InfoWindow();
         maps.visualRefresh = true;
+        //$scope.infoWindow = new maps.InfoWindow();
       });
     };
+
   }]);
 
 })(angular);
