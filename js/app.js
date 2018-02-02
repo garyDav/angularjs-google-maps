@@ -33,7 +33,7 @@
       // v: '3.20',
       key: 'AIzaSyA8it686ZBtnGsZKnBeq5pxh3N25UC5Uws',
       language: 'es',
-      libraries: 'places'
+      libraries: 'places' //libraries: 'lib1,lib2,lib3,...'
     });
   }]);
 
@@ -46,16 +46,19 @@
     $scope.gmapConfig = {
       lat: -19.04781836355251,
       lng: -65.25945163544924,
-      status: false
+      status: true
     };
     $scope.gmap = function() {
+      // Seteando valores iniciales
       var position = {latitude:$scope.gmapConfig.lat,longitude:$scope.gmapConfig.lng};
       var status = $scope.gmapConfig.status;
+      //Seteando el modelo de la vista gmap
       $scope.self = {
         address: '',
         lat: '',
         lng: ''
       };
+      //Creando mapa
       $scope.map = {
         center: position,
         zoom: 16,
@@ -64,6 +67,7 @@
           scrollwheel: false
         }
       };
+      //Creando marker
       $scope.marker = {
         id: 1,
         coords: position,
@@ -71,7 +75,7 @@
           animation: 2,
           draggable: true
         },
-        events: {
+        events: { //Defino los eventos del marker
           mouseup: function( gMarker, eventName, model, latLngArg ) {
             var pos = {
               lat: latLngArg[0].latLng.lat(),
@@ -91,6 +95,7 @@
           }
         }
       };
+      //Creando searchBox para buscar direcciones
       $scope.searchbox = {
         template:'searchbox.tpl.html',
         events: {
@@ -113,10 +118,12 @@
           }
         }
       };
+      //Options para searchBox
       $scope.options = {
         scrollwheel: false
       };
 
+      //Inicio el mapa
       GoogleMapApi.then(function(maps) {
         console.log(maps);
         if(status) {
